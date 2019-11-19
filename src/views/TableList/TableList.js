@@ -48,22 +48,31 @@ export default function TableList() {
       <GridItem xs={12} sm={12} md={12}>
         <Card>
           <CardHeader color="primary">
-            <h4 className={classes.cardTitleWhite}>Simple Table</h4>
+            <h4 className={classes.cardTitleWhite}>Set & Update Member</h4>
             <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
+              You could add a member and update itself member  in here.
             </p>
           </CardHeader>
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["Name", "Country", "City", "Salary"]}
+              tableHead={["No", "Name", "Address", "phonenumber", "email", "password"]}
               tableData={[
-                ["Dakota Rice", "Niger", "Oud-Turnhout", "$36,738"],
-                ["Minerva Hooper", "Curaçao", "Sinaai-Waas", "$23,789"],
-                ["Sage Rodriguez", "Netherlands", "Baileux", "$56,142"],
-                ["Philip Chaney", "Korea, South", "Overland Park", "$38,735"],
-                ["Doris Greene", "Malawi", "Feldkirchen in Kärnten", "$63,542"],
-                ["Mason Porter", "Chile", "Gloucester", "$78,615"]
+                ["1", "Name1","dandong", "15942517255", "name1@outlook.com", "dandong"],
+                ["2", "Name2","dandong", "15942517255", "name2@outlook.com", "dandong"],
+                ["3", "Name3","dandong", "15942517255", "name3@outlook.com", "dandong"],
+                ["4", "Name4","dandong", "15942517255", "name4@outlook.com", "dandong"],
+                ["5", "Name5","dandong", "15942517255", "name5@outlook.com", "dandong"],
+                ["6", "Name6","dandong", "15942517255", "name6@outlook.com", "dandong"],
+                ["7", "Name7","dandong", "15942517255", "name7@outlook.com", "dandong"],
+                ["8", "Name8","dandong", "15942517255", "name8@outlook.com", "dandong"],
+                ["9", "Name9","dandong", "15942517255", "name9@outlook.com", "dandong"],
+                ["10","Name10","dandong", "15942517255", "name10@outlook.com","dandong"],
+                ["11","Name11","dandong", "15942517255", "name11@outlook.com","dandong"],
+                ["12","Name12","dandong", "15942517255", "name12@outlook.com","dandong"],
+                ["13","Name13","dandong", "15942517255", "name13@outlook.com","dandong"],
+                ["14","Name14","dandong", "15942517255", "name14@outlook.com","dandong"],
+                ["15","Name15","dandong", "15942517255", "name15@outlook.com","dandong"]
               ]}
             />
           </CardBody>
@@ -73,35 +82,33 @@ export default function TableList() {
         <Card plain>
           <CardHeader plain color="primary">
             <h4 className={classes.cardTitleWhite}>
-              Table on Plain Background
+              Quality of our team
             </h4>
             <p className={classes.cardCategoryWhite}>
-              Here is a subtitle for this table
+              You could add the fact and  update it in here.
             </p>
           </CardHeader>
           <CardBody>
             <Table
               tableHeaderColor="primary"
-              tableHead={["ID", "Name", "Country", "City", "Salary"]}
+              tableHead={["No", "Name", "date", "money", "other"]}
               tableData={[
-                ["1", "Dakota Rice", "$36,738", "Niger", "Oud-Turnhout"],
-                ["2", "Minerva Hooper", "$23,789", "Curaçao", "Sinaai-Waas"],
-                ["3", "Sage Rodriguez", "$56,142", "Netherlands", "Baileux"],
-                [
-                  "4",
-                  "Philip Chaney",
-                  "$38,735",
-                  "Korea, South",
-                  "Overland Park"
-                ],
-                [
-                  "5",
-                  "Doris Greene",
-                  "$63,542",
-                  "Malawi",
-                  "Feldkirchen in Kärnten"
-                ],
-                ["6", "Mason Porter", "$78,615", "Chile", "Gloucester"]
+                ["1", "Name1", "18/11/2019", "$36,738", "freelancer"],
+                ["2", "Name2", "18/11/2019", "$23,789", "freelancer"],
+                ["3", "Name3", "18/11/2019", "$56,142", "freelancer"],
+                ["4", "Name4", "18/11/2019", "$56,142", "freelancer"],
+                ["5", "Name5", "18/11/2019", "$56,142", "freelancer"],
+                ["6", "Name6", "18/11/2019", "$56,142", "freelancer"],
+                ["7", "Name7", "18/11/2019", "$56,142", "freelancer"],
+                ["8", "Name8", "18/11/2019", "$56,142", "freelancer"],
+                ["9", "Name9", "18/11/2019", "$56,142", "freelancer"],
+                ["10","Name10","18/11/2019", "$56,142", "freelancer"],
+                ["11","Name11","18/11/2019", "$56,142", "freelancer"],
+                ["12","Name12","18/11/2019", "$56,142", "freelancer"],
+                ["13","Name13","18/11/2019", "$56,142", "freelancer"],
+                ["14","Name14","18/11/2019", "$56,142", "freelancer"],
+                ["15","Name15","18/11/2019", "$56,142", "freelancer"]
+                
               ]}
             />
           </CardBody>
