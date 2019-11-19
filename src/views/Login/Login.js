@@ -16,37 +16,42 @@ import CardFooter from "components/Card/CardFooter.js";
 import avatar from "assets/img/faces/marc.jpg";
 
 
-class Login extends React.Component{
-    constructor(props){
+class Login extends React.Component {
+    constructor(props) {
         super(props)
-        this.state={
-            email:'',
-            password:''
+        this.state = {
+            email: '',
+            password: ''
         }
         // this.props.flag=1;
-    } 
-    changeemail=(e)=>{       this.setState({email:e.target.value});    }
-    changepass=(e)=>{        this.setState({password:e.target.value}); }
-    onSignin = ()=>{
+    }
+    changeemail = (e) => { this.setState({ email: e.target.value });alert(this.state.email) }
+    changepass = (e) => { this.setState({ password: e.target.value }); }
+    onSignin = () => {
         if (this.state.email == this.state.password) {
-            alert("Successfully");
-            window.location.href="/admin/dashboard";
+            alert("You are logged in!"+this.state.email+"-"+this.state.password);
+            window.location.href = "/admin/dashboard";
         } else {
-            alert("Incorrect Password");
-        }      
+            alert("Wrong username or password!");
+        }
     }
 
-    render(){
+    render() {
 
         return (
             <div className="container">
-                <h1>asdf</h1>
+                <h1>You are Welcome! </h1>
+                <div>
+                    <p>
+                        If the user enters the right username and password, the program should output a message saying “You are logged in!”. If not the program should display the message “Wrong username or password!”.
+                    </p>
+                </div>
                 <GridContainer>
                     <GridItem xs={12} sm={12} md={12} lg={12} xl={12}>
                         <GridItem xs={6} sm={6} md={5} lg={4} xl={3}>
                             <CustomInput
                                 labelText="Email"
-                                value={this.email}
+                                value={this.state.email}
                                 onChange={this.changeemail}
                                 id="email"
                                 formControlProps={{
@@ -59,7 +64,7 @@ class Login extends React.Component{
                         <GridItem xs={6} sm={6} md={5} lg={4} xl={3}>
                             <CustomInput
                                 labelText="Password"
-                                value={this.password}
+                                value={this.state.password}
                                 onChange={this.changepass}
                                 id="password"
                                 formControlProps={{

@@ -46,6 +46,48 @@ export default function Dashboard() {
   return (
     <div>
       <GridContainer>
+      <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="warning" stats icon>
+              <CardIcon color="warning">
+                <Icon>content_copy</Icon>
+              </CardIcon>
+              <p className={classes.cardCategory}>Our Team Plan</p>
+              <h3 className={classes.cardTitle}>
+              $ 30000<small></small>
+              </h3>
+            </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <Danger>
+                  <Warning />
+                </Danger>
+                <a href="#pablo" onClick={e => e.preventDefault()}>
+                  On a month
+                </a>
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+
+        <GridItem xs={12} sm={6} md={3}>
+          <Card>
+            <CardHeader color="success" stats icon>
+              <CardIcon color="success">
+                <Store />
+              </CardIcon>
+              <p className={classes.cardCategory}>current quality </p>
+              <h3 className={classes.cardTitle}>$5000</h3>
+            </CardHeader>
+            <CardFooter stats>
+              <div className={classes.stats}>
+                <DateRange />
+                Last 18 days
+              </div>
+            </CardFooter>
+          </Card>
+        </GridItem>
+
         <GridItem xs={12} sm={12} md={12}>
           <Card chart>
             <CardHeader color="success">
