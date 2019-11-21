@@ -27,6 +27,7 @@ import Language from "@material-ui/icons/Language";
 // core components/views for Admin layout
 import DashboardPage from "views/Dashboard/Dashboard.js";
 import Login from "views/Login/Login.js";
+import Gotquality from "views/gotquality/gotquality.js";
 import UserProfile from "views/UserProfile/UserProfile.js";
 import TableList from "views/TableList/TableList.js";
 import Typography from "views/Typography/Typography.js";
@@ -53,21 +54,28 @@ const dashboardRoutes = [
     icon: Person,
     component: UserProfile,
     layout: "/admin"
+  }, {
+    path: "/table",
+    name: "Admin Panel",
+    rtlName: "قائمة الجدول",
+    icon: "content_paste",
+    component: TableList,
+    layout: "/admin"
   },
   {
+    path: "/gotquality",
+    name: "Working Panel",
+    rtlName: "ملف تعريفي للمستخدم",
+    icon: "content_paste",
+    component: Gotquality,
+    layout: "/admin"
+  },
+   {
     path: "/login",
     name: "login",
     rtlName: "پشتیبانی از راست به چپ",
     icon: Person,
     component: Login,
-    layout: "/admin"
-  },
-  {
-    path: "/table",
-    name: "Table List",
-    rtlName: "قائمة الجدول",
-    icon: "content_paste",
-    component: TableList,
     layout: "/admin"
   }
 ];
