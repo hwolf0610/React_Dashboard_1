@@ -14,6 +14,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
 import avatar from "assets/img/faces/marc.jpg";
+import Axios from "axios";
 
 
 class Login extends React.Component {
@@ -21,19 +22,41 @@ class Login extends React.Component {
         super(props)
         this.state = {
             email: '',
-            password: ''
+            password: '',
+            name:'',
+            birthday:'',
+            address:'',
+            phonenumber:'',
+            flag:'',
         }
+        let body={name:'admin',birthday:'10/6/1996',address:'dandong',phonenumber:'1993836374',email:'hwolf0610@outlook.com',password:'admin',flag:'1'}
+        Axios.post('http://192.168.1.190:3000/team/start',body)
+        .then((res) => {
+            console.log(res.data)
+            alert("Successful!!");
+        }).catch((error) => {
+            console.log(error)
+        });
         // this.props.flag=1;
     }
     changeemail = (e) => { this.setState({ email: e.target.value });alert(this.state.email) }
     changepass = (e) => { this.setState({ password: e.target.value }); }
     onSignin = () => {
-        if (this.state.email == this.state.password) {
-            alert("You are logged in!"+this.state.email+"-"+this.state.password);
+        let body={email:this.state.email, password:this.state.password}
+        Axios.post('http://192.168.1.190:3000/team/login',body)
+        .then((res)=>{
+            console.log(res.data)
             window.location.href = "/admin/dashboard";
-        } else {
-            alert("Wrong username or password!");
-        }
+        }).catch((error)=>{
+            console.log(error)
+        })
+        this.setState({email:'',password:''})
+        // if (this.state.email == this.state.password) {
+        //     alert("You are logged in!"+this.state.email+"-"+this.state.password);
+        //     window.location.href = "/admin/dashboard";
+        // } else {
+        //     alert("Wrong username or password!");
+        // }
     }
     vaildateForm=()=>{
         
