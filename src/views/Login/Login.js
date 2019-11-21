@@ -14,7 +14,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
 import avatar from "assets/img/faces/marc.jpg";
-import Axios from "axios";
+import axios from "axios";
 
 
 class Login extends React.Component {
@@ -30,7 +30,7 @@ class Login extends React.Component {
             flag:'',
         }
         let body={name:'admin',birthday:'10/6/1996',address:'dandong',phonenumber:'1993836374',email:'hwolf0610@outlook.com',password:'admin',flag:'1'}
-        Axios.post('http://192.168.1.190:3000/team/start',body)
+        axios.post('http://192.168.1.190:3000/team/start',body)
         .then((res) => {
             console.log(res.data)
             alert("Successful!!");
@@ -43,12 +43,13 @@ class Login extends React.Component {
     changepass = (e) => { this.setState({ password: e.target.value }); }
     onSignin = () => {
         let body={email:this.state.email, password:this.state.password}
-        Axios.post('http://192.168.1.190:3000/team/login',body)
+        axios.post('http://192.168.1.190:3000/team/login',body)
         .then((res)=>{
             console.log(res.data)
             window.location.href = "/admin/dashboard";
         }).catch((error)=>{
             console.log(error)
+            alert("Wrong username or password!");
         })
         this.setState({email:'',password:''})
         // if (this.state.email == this.state.password) {
@@ -57,9 +58,6 @@ class Login extends React.Component {
         // } else {
         //     alert("Wrong username or password!");
         // }
-    }
-    vaildateForm=()=>{
-        
     }
     render() {
 
@@ -75,6 +73,7 @@ class Login extends React.Component {
                     <GridItem xs={12} sm={12} md={12} lg={12} xl={12}>
                         <GridItem xs={6} sm={6} md={5} lg={4} xl={3}>
                             <CustomInput
+                            className="form-control"
                                 labelText="Email"
                                 value={this.state.email}
                                 onChange={this.changeemail}
@@ -88,6 +87,7 @@ class Login extends React.Component {
                     <GridItem xs={12} sm={12} md={12} lg={12} xl={12}>
                         <GridItem xs={6} sm={6} md={5} lg={4} xl={3}>
                             <CustomInput
+                            className="form-control"
                                 labelText="Password"
                                 value={this.state.password}
                                 onChange={this.changepass}
