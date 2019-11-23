@@ -8,20 +8,20 @@ import Icon from "@material-ui/core/Icon";
 import Store from "@material-ui/icons/Store";
 import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
+// import LocalOffer from "@material-ui/icons/LocalOffer";
+// import Update from "@material-ui/icons/Update";
 import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
-import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
+// import Accessibility from "@material-ui/icons/Accessibility";
+// import BugReport from "@material-ui/icons/BugReport";
+// import Code from "@material-ui/icons/Code";
+// import Cloud from "@material-ui/icons/Cloud";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
-import CustomTabs from "components/CustomTabs/CustomTabs.js";
+// import Table from "components/Table/Table.js";
+// import Tasks from "components/Tasks/Tasks.js";
+// import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Danger from "components/Typography/Danger.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
@@ -29,7 +29,10 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
-import { bugs, website, server } from "variables/general.js";
+import { Bar } from "react-chartjs-2";
+import { MDBContainer } from "mdbreact";
+import axios from "axios";
+// import { bugs, website, server } from "variables/general.js";
 
 import {
   dailySalesChart,
@@ -41,130 +44,143 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 
 const useStyles = makeStyles(styles);
 
-export default function Dashboard() {
-  const classes = useStyles();
-  return (
-    <div>
-      <GridContainer>
-      <GridItem xs={12} sm={6} md={6}>
-          <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                <Icon>content_copy</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Our Team Plan</p>
-              <h3 className={classes.cardTitle}>
-              $ 30000<small></small>
-              </h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Danger>
-                  <Warning />
-                </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  On a month
-                </a>
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-
-        <GridItem xs={12} sm={6} md={6}>
-          <Card>
-            <CardHeader color="success" stats icon>
-              <CardIcon color="success">
-                <Store />
-              </CardIcon>
-              <p className={classes.cardCategory}>current quality </p>
-              <h3 className={classes.cardTitle}>$5000</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <DateRange />
-                Last 18 days
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Chart into Month</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
-                increase in today sales.
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        </GridContainer>
-        <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card chart>
-            <CardHeader color="warning">
-              <ChartistGraph
-                className="ct-chart"
-                data={emailsSubscriptionChart.data}
-                type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Chart into quarter of year</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        </GridContainer>
-        <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card chart>
-            <CardHeader color="danger">
-              <ChartistGraph
-                className="ct-chart"
-                data={completedTasksChart.data}
-                type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Chart into year</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </GridContainer>
+export default class Dashboard extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+     
+      dataone: [],
+      dataBar: {
+        labels: ["Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red"],
+        datasets: [
+          {
+            label: "% of Votes",
+            data: [12, 19, 3, 5, 6, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+            backgroundColor: [
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)",
+              "rgba(255, 134,159,0.4)"
+            ],
+            borderWidth: 2,
+            borderColor: [
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)",
+              "rgba(255, 134, 159, 1)"
+            ]
+          }
+        ]
+      },
+      barChartOptions: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [
+            {
+              barPercentage: 1,
+              gridLines: {
+                display: true,
+                color: "rgba(0, 0, 0, 0.1)"
+              }
+            }
+          ],
+          yAxes: [
+            {
+              gridLines: {
+                display: true,
+                color: "rgba(0, 0, 0, 0.1)"
+              },
+              ticks: {
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+        
+      }
       
-    </div>
-  );
+     
+
+    }
+    var key = 2
+    //  key = _01
+    //  key = _2019
+    axios.post('http://localhost:3003/todos/getchart' + key)
+      .then((res) => {
+        let {dataone, dataBar} = this.state
+        if (res.data.length > 0){
+          dataone = res.data
+          dataBar.datasets.data =  dataone.price
+          this.setState({dataone, dataBar})
+        }
+
+      }).catch((error) => {
+        console.log(error)
+      });
+
+      if (localStorage.getItem("key") == 1) {
+        window.location.href = "/admin/login";
+      } else {
+        
+      }
+
+  }
+  render() {
+    return (
+      <div>
+         
+        <GridContainer>
+          <select>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+          </select>
+        </GridContainer>
+        <GridContainer >
+          <MDBContainer>
+            <h3 className="mt-5">Plan & Current Quality</h3>
+            <Bar data={this.state.dataBar} options={this.state.barChartOptions} />
+          </MDBContainer>
+        </GridContainer>
+
+
+
+
+
+      </div>
+    );
+  }
+
 }

@@ -1,36 +1,92 @@
 import React from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 // core components
-import Table from "components/Table/Table.js";
+// import Table from "components/Table/Table.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardAvatar from "components/Card/CardAvatar.js";
+// import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
-import { MDBContainer, MDBAlert, MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
+import clsx from 'clsx';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+
+
+import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
 import axios from "axios";
-export default class Gotquality extends React.Component { 
+export default class Gotquality extends React.Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
-            email: '',
-            password: '',
-            name:'',
-            birthday:'',
-            address:'',
-            phonenumber:'',
-            flag:'',
+            date: '',
+            name: '',
+            jobtitle: '',
+            clientname: '',
+            price: '',
+            timeline: '',
+            review: '',
+            dataList: [],
+            dataname: ['name1', 'name2', 'name3', 'name4', 'name5', 'name6', 'name7', 'name8', 'name9', 'name10', 'name11', 'name12', 'name13', 'name14', 'name15',],
         }
-        let body={name:'admin',birthday:'10/6/1996',address:'dandong',phonenumber:'1993836374',email:'hwolf0610@outlook.com',password:'admin',flag:'1'}
-        axios.post('http://192.168.1.190:3000/team/working',body)
+        axios.post('http://localhost:3003/todos/jobshow')
+            .then((res) => {
+                // this.state.email=res.data[0].email;
+                // this.state.password=res.data[0].password;
+                // alert(res.data[0].email);
+
+                if (res.data.length > 0)
+                    this.setState({ dataList: res.data })
+
+                // alert("Successful!!");
+            }).catch((error) => {
+                console.log(error)
+            });
+            if (localStorage.getItem("key") == 1) {
+                window.location.href = "/admin/login";
+              } else {
+                
+              }
+
+    }
+    onAddjob = () => {
+        var datev = document.getElementById('date').value;
+        var namev = document.getElementById('name').value;
+        var jobtitlev = document.getElementById('jobtitle').value;
+        var clientnamev = document.getElementById('clientname').value;
+        var pricev = document.getElementById('price').value;
+        var timelinev = document.getElementById('timeline').value;
+        var reviewv = document.getElementById('review').value;
+        let body = { date: datev, name: namev, jobtitle: jobtitlev, clientname: clientnamev, price: pricev, timeline: timelinev, review: reviewv }
+        axios.post('http://192.168.1.190:3003/todos/working', body)
+            .then((res) => {
+                console.log(res.data)
+                alert("Successful!!");
+            }).catch((error) => {
+                console.log(error)
+            });
+    }
+
+    update = (data)=>{
+        alert("item update clicked : " + data)
+        let id=data
+        let body=this.state.dataList
+        axios.post('http://192.168.1.190:3003/todos/workupdate'+id,body)
         .then((res) => {
             console.log(res.data)
             alert("Successful!!");
@@ -38,7 +94,18 @@ export default class Gotquality extends React.Component {
             console.log(error)
         });
     }
-    render(){
+    delete = (data)=>{
+        alert("item clicked : " + data)
+        let id=data
+        axios.delete('http://192.168.1.190:3003/todos/workdelete/'+id)
+            .then((res) => {
+                console.log(res.data)
+                alert("Successful_del!!");
+            }).catch((error) => {
+                console.log(error)
+            });
+    }
+    render() {
         return (
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
@@ -49,7 +116,7 @@ export default class Gotquality extends React.Component {
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={4}>
+                                <GridItem xs={12} sm={12} md={6}>
                                     <CustomInput
                                         labelText="Date"
                                         id="date"
@@ -58,35 +125,30 @@ export default class Gotquality extends React.Component {
                                         }}
                                     />
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
-                                    <MDBDropdown dropright >
-                                        <MDBDropdownToggle caret color="primary">
-                                            Name
-                               </MDBDropdownToggle>
-                                        <MDBDropdownMenu basic>
-                                            <MDBDropdownItem>Admin</MDBDropdownItem>
-                                            <MDBDropdownItem divider />
-                                            <MDBDropdownItem>Name 1</MDBDropdownItem>
-                                            <MDBDropdownItem>Name 2</MDBDropdownItem>
-                                            <MDBDropdownItem>Name 3</MDBDropdownItem>
-                                        </MDBDropdownMenu>
-                                    </MDBDropdown>
-                                </GridItem>
-                                <GridItem xs={12} sm={12} md={4}>
-                                    <CustomInput
+                                <GridItem xs={12} sm={12} md={6}>
+                                      <select id="name" style={{ fontSize: '35px', width: '100%' }}>
+                                        {
+                                            this.state.dataname.map((item, index) => {
+                                                return (
+                                                    <option key={index}>{item}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
+                                    {/* <CustomInput
                                         labelText="Name"
                                         id="name"
                                         formControlProps={{
                                             fullWidth: true
                                         }}
-                                    />
+                                    /> */}
                                 </GridItem>
                             </GridContainer>
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={10}>
                                     <CustomInput
                                         labelText="Job Title"
-                                        id="date"
+                                        id="jobtitle"
                                         formControlProps={{
                                             fullWidth: true
                                         }}
@@ -114,22 +176,22 @@ export default class Gotquality extends React.Component {
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={4}>
                                     <CustomInput
-                                        labelText="Date"
-                                        id="date"
+                                        labelText="Timeline"
+                                        id="timeline"
                                         formControlProps={{
                                             fullWidth: true
                                         }}
                                     />
                                 </GridItem>
-    
+
                             </GridContainer>
-    
+
                             <GridContainer>
                                 <GridItem xs={12} sm={12} md={12}>
                                     <InputLabel style={{ color: "#AAAAAA" }}>Review</InputLabel>
                                     <CustomInput
                                         labelText="Please input its other information about working."
-                                        id="about-me"
+                                        id="review"
                                         formControlProps={{
                                             fullWidth: true
                                         }}
@@ -142,45 +204,11 @@ export default class Gotquality extends React.Component {
                             </GridContainer>
                         </CardBody>
                         <CardFooter>
-                            <Button color="primary">Add Working list</Button>
+                            <Button color="primary" onClick={this.onAddjob}>Add Member</Button>
                         </CardFooter>
                     </Card>
                 </GridItem>
-    
-    
-                {/* <GridItem xs={12} sm={12} md={12}>
-            <Card>
-              <CardHeader color="primary">
-                <h4 className={classes.cardTitleWhite}>Set & Update Member</h4>
-                <p className={classes.cardCategoryWhite}>
-                  You could add a member and update itself member  in here.
-                </p>
-              </CardHeader>
-              <CardBody>
-                <Table
-                  tableHeaderColor="primary"
-                  tableHead={["No", "Name", "Address", "phonenumber", "email", "password"]}
-                  tableData={[
-                    ["1", "Name1","dandong", "15942517255", "name1@outlook.com", "dandong"],
-                    ["2", "Name2","dandong", "15942517255", "name2@outlook.com", "dandong"],
-                    ["3", "Name3","dandong", "15942517255", "name3@outlook.com", "dandong"],
-                    ["4", "Name4","dandong", "15942517255", "name4@outlook.com", "dandong"],
-                    ["5", "Name5","dandong", "15942517255", "name5@outlook.com", "dandong"],
-                    ["6", "Name6","dandong", "15942517255", "name6@outlook.com", "dandong"],
-                    ["7", "Name7","dandong", "15942517255", "name7@outlook.com", "dandong"],
-                    ["8", "Name8","dandong", "15942517255", "name8@outlook.com", "dandong"],
-                    ["9", "Name9","dandong", "15942517255", "name9@outlook.com", "dandong"],
-                    ["10","Name10","dandong", "15942517255", "name10@outlook.com","dandong"],
-                    ["11","Name11","dandong", "15942517255", "name11@outlook.com","dandong"],
-                    ["12","Name12","dandong", "15942517255", "name12@outlook.com","dandong"],
-                    ["13","Name13","dandong", "15942517255", "name13@outlook.com","dandong"],
-                    ["14","Name14","dandong", "15942517255", "name14@outlook.com","dandong"],
-                    ["15","Name15","dandong", "15942517255", "name15@outlook.com","dandong"]
-                  ]}
-                />
-              </CardBody>
-            </Card>
-          </GridItem> */}
+
                 <GridItem xs={12} sm={12} md={12}>
                     <Card plain>
                         <CardHeader plain color="primary">
@@ -192,7 +220,118 @@ export default class Gotquality extends React.Component {
                 </p>
                         </CardHeader>
                         <CardBody>
+
+                            {/* {
+                this.state.dataList.map(item => {
+                  return (
+                    <div> */}
+
+                            {/* <Table
+                        tableHeaderColor="primary"
+                        tableHead={["date", "name", "jobtitle", "clientname", "price", "timeline", "review"]}
+                        tableData={[[item.date, item.name, item.jobtitle, item.clientname, item.price, item.timeline, item.review],]}
+                      /> */}
+
                             <Table
+                                // className={classes.table}
+                                aria-labelledby="tableTitle"
+                                size={'medium'}
+                                aria-label="enhanced table"
+                            >
+
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell padding="checkbox">
+                                            <span>Date</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Name</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Job Title</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Client Name</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Price</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Timeline</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Review</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Update</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Delete</span>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+
+                                <TableBody>
+
+                                    {
+
+                                        this.state.dataList.map((item, index) => {
+                                            return (
+
+                                                <TableRow
+                                                    hover
+                                                    tabIndex={-1}
+                                                    key={index}                                                    
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.date}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.name}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.jobtitle}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.clientname}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.price}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.timeline}</span>
+                                                    </TableCell>   
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.review}</span>
+                                                    </TableCell>                                                  
+                                                    <TableCell padding="checkbox">
+                                                        <Button
+                                                             onClick = {this.update.bind(this, item._id)}
+                                                        >Update                                                       
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <Button
+                                                             onClick = {this.delete.bind(this, item._id)}
+                                                        >Delete                                                      
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+
+                                            )
+                                        })
+                                    }
+
+
+
+                                </TableBody>
+                            </Table>
+                            {/* </div>
+
+                  )
+                })
+              } */}
+                            {/* <Table
                                 tableHeaderColor="primary"
                                 tableHead={["No", "Name", "date", "money", "other"]}
                                 tableData={[
@@ -211,14 +350,14 @@ export default class Gotquality extends React.Component {
                                     ["13", "Name13", "18/11/2019", "$56,142", "freelancer"],
                                     ["14", "Name14", "18/11/2019", "$56,142", "freelancer"],
                                     ["15", "Name15", "18/11/2019", "$56,142", "freelancer"]
-    
+
                                 ]}
-                            />
+                            /> */}
                         </CardBody>
                     </Card>
                 </GridItem>
             </GridContainer>
         );
-    } 
-    
+    }
+
 }

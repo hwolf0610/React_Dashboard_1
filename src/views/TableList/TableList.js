@@ -1,260 +1,343 @@
 import React from "react";
 // @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
+// import { makeStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 // core components
-import Table from "components/Table/Table.js";
+// import Table from "components/Table/Table.js";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
-import CardAvatar from "components/Card/CardAvatar.js";
+// import CardAvatar from "components/Card/CardAvatar.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
+import MenuItem from '@material-ui/core/MenuItem';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
-import avatar from "assets/img/faces/marc.jpg";
+import clsx from 'clsx';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+
+
+import { MDBDropdown, MDBDropdownToggle, MDBDropdownMenu, MDBDropdownItem } from "mdbreact";
 import axios from "axios";
+
 export default class TableList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-        name:'',
-        email: '',
-        password: '',
-        confirm:'',
-        birthday:'',
-        address:'',
-        phonenumber:'',
-        aboutme:'',
-        flag:'',
+      name: '',
+      email: '',
+      password: '',
+      confirm: '',
+      birthday: '',
+      address: '',
+      phonenumber: '',
+      aboutme: '',
+      flag: '',
+      dataList: [],
     }
+    axios.post('http://localhost:3003/todos/show')
+      .then((res) => {
+        // this.state.email=res.data[0].email;
+        // this.state.password=res.data[0].password;
+        // alert(res.data[0].email);
+
+        if (res.data.length > 0)
+          this.setState({ dataList: res.data })
+
+        // alert("Successful!!");
+      }).catch((error) => {
+        console.log(error)
+      });
+
+      if (localStorage.getItem("key") == 1) {
+        window.location.href = "/admin/login";
+      } else {
+        
+      }
   }
-changename= (e) => { this.setState({ name: e.target.value }); }
-changeemail = (e) => { this.setState({ email: e.target.value }); }
-changepassword = (e) => { this.setState({ password: e.target.value }); }
-changeconfirm = (e) => { this.setState({ confirm: e.target.value }); }
-changebirthday = (e) => { this.setState({ birthday: e.target.value }); }
-changeaddress = (e) => { this.setState({ address: e.target.value }); }
-changephonenumber = (e) => { this.setState({ phonenumber: e.target.value }); }
-// changeaboutme = (e) => { this.setState({ aboutme: e.target.value }); }
-onSignup=()=>{
-  let body={name:this.state.name, birthday:this.state.birthday, address:this.state.address, phonenumber:this.state.phonenumber, email:this.state.email, password:this.state.password, flag:'2'}
-        axios.post('http://192.168.1.190:3000/team/add',body)
+  changename = (e) => { this.setState({ name: e.target.value }); }
+  changeemail = (e) => { this.setState({ email: e.target.value }); }
+  changepassword = (e) => { this.setState({ password: e.target.value }); }
+  changeconfirm = (e) => { this.setState({ confirm: e.target.value }); }
+  changebirthday = (e) => { this.setState({ birthday: e.target.value }); }
+  changeaddress = (e) => { this.setState({ address: e.target.value }); }
+  changephonenumber = (e) => { this.setState({ phonenumber: e.target.value }); }
+  // changeaboutme = (e) => { this.setState({ aboutme: e.target.value }); }
+  onSignup = () => {
+    var namev = document.getElementById('username').value;
+    var emailv = document.getElementById('email').value;
+    var passwordv = document.getElementById('password').value;
+    var confirmv = document.getElementById('confirm').value;
+    var birthdayv = document.getElementById('birthday').value;
+    var addressv = document.getElementById('address').value;
+    var phonenumberv = document.getElementById('phonenumber').value;
+    if (passwordv === confirmv) {
+      let body = { name: namev, birthday: birthdayv, address: addressv, phonenumber: phonenumberv, email: emailv, password: passwordv, flag: "2" }
+      axios.post('http://192.168.1.190:3003/todos/add', body)
+        .then((res) => {
+          console.log(res.data)
+          alert("Successful!!");          
+        }).catch((error) => {
+          console.log(error)
+        });
+    } else {
+      alert("not same password with confirm!");
+    }
+
+    this.setState({
+      name: '',
+      email: '',
+      password: '',
+      confirm: '',
+      birthday: '',
+      address: '',
+      phonenumber: '',
+      aboutme: '',
+      flag: '',
+    })
+  }
+  update = (data)=>{
+    alert("item update clicked : " + data)
+    let id=data
+    let body=this.state.dataList
+    axios.post('http://192.168.1.190:3003/todos/userupdate'+id,body)
+    .then((res) => {
+        console.log(res.data)
+        alert("Successful!!");
+    }).catch((error) => {
+        console.log(error)
+    });
+}
+delete = (data)=>{
+    alert("item clicked : " + data)
+    let id=data
+    axios.post('http://192.168.1.190:3003/todos/userdelete'+id)
         .then((res) => {
             console.log(res.data)
             alert("Successful!!");
         }).catch((error) => {
             console.log(error)
         });
-        this.setState({name:'',
-        email: '',
-        password: '',
-        confirm:'',
-        birthday:'',
-        address:'',
-        phonenumber:'',
-        aboutme:'',
-        flag:'',})
-}   
+}
+  render() {
+    return (
+      <GridContainer>
 
-    render(){
-      return (
-        <GridContainer>
-          
-          <GridItem xs={12} sm={12} md={12}>
-              <Card>
-                <CardHeader color="primary">
-                  <h4 >Add Member</h4>
-                  <p  >Complete our member list</p>
-                </CardHeader>
-                <CardBody>
-                  <GridContainer>
-                    <GridItem xs={12} sm={12} md={3}>
-                      <CustomInput
-                      className="form-control"
-                        labelText="Username"
-                        id="username"
-                        value={this.state.name}
-                        onChange={this.changename}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
-                      <CustomInput
-                        labelText="Email address"
-                        id="email-address"
-                        value={this.state.email}
-                        onChange={this.changeemail}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
-                      <CustomInput
-                        labelText="Password"
-                        id="password"
-                        value={this.state.password}
-                        onChange={this.changepassword}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
-                      <CustomInput
-                        labelText="Password Confirm"
-                        id="confirm"
-                        value={this.state.confirm}
-                        onChange={this.changeconfirm}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer>
-                  <GridContainer>
-                    <GridItem xs={12} sm={12} md={6}>
-                      <CustomInput
-                        labelText="Birthday"
-                        id="Birthday"
-                        value={this.state.birthday}
-                        onChange={this.changebirthday}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={6}>
-                      <CustomInput
-                        labelText="Address"
-                        id="Address"
-                        value={this.state.address}
-                        onChange={this.changeaddress}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer>
-                  <GridContainer>
-                    <GridItem xs={12} sm={12} md={4}>
-                      <CustomInput
-                        labelText="Phone number 1"
-                        id="phonenumber1"
-                        value={this.state.phonenumber}
-                        onChange={this.changephonenumber}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    {/* <GridItem xs={12} sm={12} md={4}>
-                      <CustomInput
-                        labelText="Phone number 2"
-                        id="phonenumber2"
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={4}>
-                      <CustomInput
-                        labelText="Phone number 3"
-                        id="phonenumber3"
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                      />
-                    </GridItem> */}
-                  </GridContainer>
-                  {/* <GridContainer>
-                    <GridItem xs={12} sm={12} md={12}>
-                      <InputLabel style={{ color: "#AAAAAA" }}>About me</InputLabel>
-                      <CustomInput
-                        labelText="Please input its other information like hobby , like sports name, and personality."
-                        id="about-me"
-                        value={this.state.aboutme}
-                        onChange={this.changeaboutme}
-                        formControlProps={{
-                          fullWidth: true
-                        }}
-                        inputProps={{
-                          multiline: true,
-                          rows: 5
-                        }}
-                      />
-                    </GridItem>
-                  </GridContainer> */}
-                </CardBody>
-                <CardFooter>
-                  <Button color="primary" onClick={this.onSignup}>Add Member</Button>
-                </CardFooter>
-              </Card>
-            </GridItem>
-            {/* <GridItem xs={12} sm={12} md={4}>
-              <Card profile>
-                <CardAvatar profile>
-                  <a href="#pablo" onClick={e => e.preventDefault()}>
-                    <img src={avatar} alt="..." />
-                  </a>
-                </CardAvatar>
-                <CardBody profile>
-                  <h6 className={classes.cardCategory}>CEO / CO-FOUNDER</h6>
-                  <h4 className={classes.cardTitle}>Alec Thompson</h4>
-                  <p className={classes.description}>
-                    Don{"'"}t be scared of the truth because we need to restart the
-                    human foundation in truth And I love you like Kanye loves Kanye
-                    I love Rick Owens’ bed design but the back is...
-                  </p>
-                  <Button color="primary" round>
-                    Follow
-                  </Button>
-                </CardBody>
-              </Card>
-            </GridItem> */}
-          
-    
-    
-    
-          <GridItem xs={12} sm={12} md={12}>
-            <Card>
-              <CardHeader color="primary">
-                <h4  >Set & Update Member</h4>
-                <p  >
-                  You could add a member and update itself member  in here.
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4 >Add Member</h4>
+              <p  >Complete our member list</p>
+            </CardHeader>
+            <CardBody>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={3}>
+                  <CustomInput
+                    className="form-control"
+                    labelText="Username"
+                    id="username"
+                    value={this.state.name}
+                    onChange={this.changename}
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={3}>
+                  <CustomInput
+                    labelText="Email address"
+                    id="email"
+                    value={this.state.email}
+                    onChange={this.changeemail}
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={3}>
+                  <CustomInput
+                    labelText="Password"
+                    id="password"
+                    value={this.state.password}
+                    onChange={this.changepassword}
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={3}>
+                  <CustomInput
+                    labelText="Password Confirm"
+                    id="confirm"
+                    value={this.state.confirm}
+                    onChange={this.changeconfirm}
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Birthday"
+                    id="birthday"
+                    value={this.state.birthday}
+                    onChange={this.changebirthday}
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+                <GridItem xs={12} sm={12} md={6}>
+                  <CustomInput
+                    labelText="Address"
+                    id="address"
+                    value={this.state.address}
+                    onChange={this.changeaddress}
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+              <GridContainer>
+                <GridItem xs={12} sm={12} md={4}>
+                  <CustomInput
+                    labelText="Phone number 1"
+                    id="phonenumber"
+                    value={this.state.phonenumber}
+                    onChange={this.changephonenumber}
+                    formControlProps={{
+                      fullWidth: true
+                    }}
+                  />
+                </GridItem>
+              </GridContainer>
+            </CardBody>
+            <CardFooter>
+              <Button color="primary" onClick={this.onSignup}>Add Member</Button>
+            </CardFooter>
+          </Card>
+        </GridItem>
+        <GridItem xs={12} sm={12} md={12}>
+          <Card>
+            <CardHeader color="primary">
+              <h4  >Set & Update Member</h4>
+              <p  >
+                You could add a member and update itself member  in here.
                 </p>
-              </CardHeader>
-              <CardBody>
-                <Table
-                  tableHeaderColor="primary"
-                  tableHead={["No", "Name", "Address", "phonenumber", "email", "password"]}
-                  tableData={[
-                    ["1", "Name1","dandong", "15942517255", "name1@outlook.com", "dandong"],
-                    ["2", "Name2","dandong", "15942517255", "name2@outlook.com", "dandong"],
-                    ["3", "Name3","dandong", "15942517255", "name3@outlook.com", "dandong"],
-                    ["4", "Name4","dandong", "15942517255", "name4@outlook.com", "dandong"],
-                    ["5", "Name5","dandong", "15942517255", "name5@outlook.com", "dandong"],
-                    ["6", "Name6","dandong", "15942517255", "name6@outlook.com", "dandong"],
-                    ["7", "Name7","dandong", "15942517255", "name7@outlook.com", "dandong"],
-                    ["8", "Name8","dandong", "15942517255", "name8@outlook.com", "dandong"],
-                    ["9", "Name9","dandong", "15942517255", "name9@outlook.com", "dandong"],
-                    ["10","Name10","dandong", "15942517255", "name10@outlook.com","dandong"],
-                    ["11","Name11","dandong", "15942517255", "name11@outlook.com","dandong"],
-                    ["12","Name12","dandong", "15942517255", "name12@outlook.com","dandong"],
-                    ["13","Name13","dandong", "15942517255", "name13@outlook.com","dandong"],
-                    ["14","Name14","dandong", "15942517255", "name14@outlook.com","dandong"],
-                    ["15","Name15","dandong", "15942517255", "name15@outlook.com","dandong"]
-                  ]}
-                />
-              </CardBody>
-            </Card>
-          </GridItem>
-          {/* <GridItem xs={12} sm={12} md={12}>
+            </CardHeader>
+            <CardBody>
+              {/* <Table
+                    tableHeaderColor="primary"
+                    tableHead={["Name", "Birthday", "Address", "phonenumber", "email", "password"]}
+                    tableData={[this.state.dataList,]}
+                    /> */}
+                    <Table
+                                // className={classes.table}
+                                aria-labelledby="tableTitle"
+                                size={'medium'}
+                                aria-label="enhanced table"
+                            >
+
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell padding="checkbox">
+                                            <span>Name</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Birthday</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Address</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Phonenumber</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Email</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Password</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Update</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Delete</span>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+
+                                <TableBody>
+
+                                    {
+
+                                        this.state.dataList.map((item, index) => {
+                                            return (
+
+                                                <TableRow
+                                                    hover
+                                                    tabIndex={-1}
+                                                    key={index}                                                    
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.date}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.name}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.jobtitle}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.clientname}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.price}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.timeline}</span>
+                                                    </TableCell>                                                  
+                                                    <TableCell padding="checkbox">
+                                                        <Button
+                                                             onClick = {this.update.bind(this, item.date)}
+                                                        >Update                                                       
+                                                        </Button>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <Button
+                                                             onClick = {this.delete.bind(this, item.date)}
+                                                        >Delete                                                      
+                                                        </Button>
+                                                    </TableCell>
+                                                </TableRow>
+
+                                            )
+                                        })
+                                    }
+
+
+
+                                </TableBody>
+                            </Table>
+            
+
+            </CardBody>
+          </Card>
+        </GridItem>
+        {/* <GridItem xs={12} sm={12} md={12}>
             <Card plain>
               <CardHeader plain color="primary">
                 <h4 className={classes.cardTitleWhite}>
@@ -290,6 +373,6 @@ onSignup=()=>{
               </CardBody>
             </Card>
           </GridItem> */}
-        </GridContainer>);
-    }
+      </GridContainer>);
+  }
 }
