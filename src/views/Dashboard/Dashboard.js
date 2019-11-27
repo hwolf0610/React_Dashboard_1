@@ -50,6 +50,7 @@ import {
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import { border } from "@material-ui/system";
 
 const useStyles = makeStyles(styles);
 
@@ -58,48 +59,17 @@ export default class Dashboard extends React.Component {
     super(props)
     this.state = {
       dataList: [],
-      datatwo: [12, 19, 3, 5, 6, 5, 3, 3, 3, 3, 3, 3, 3, 3, 9],
       dataone: [],
       dataBar: {
-        labels: ["Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red"],
+        labels: [],
         datasets: [
           {
             label: "% of Votes",
-            data: [12, 19, 3, 5, 6, 5, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+            data: [],
             backgroundColor: [
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)",
-              "rgba(255, 134,159,0.4)"
             ],
             borderWidth: 2,
             borderColor: [
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)",
-              "rgba(255, 134, 159, 1)"
             ]
           }
         ]
@@ -138,35 +108,112 @@ export default class Dashboard extends React.Component {
     var key = 2
     //  key = _01
     //  key = _2019
+    // axios.post('http://localhost:3003/todos/show')
+    // .then((res) => {
+    //   if (res.data.length > 0){
+    //     let filtername=[]
+    //     let filterprice=[]
+    //     res.data.map(item=>{
+    //       filtername.push(item.name)
+    //     })
+    //     for(var i=0; i<filtername.length-1;i++){
+    //       for(var j=1;j<filtername.length;j++){
+    //         if (filtername[i]==filtername[j]) {
+
+    //         } else {
+
+    //         }
+    //       }          
+    //     }
+
+    //   }
+    //     this.setState({ dataList: res.data })
+    // }).catch((error) => {
+    //   console.log(error)
+    // });
 
     axios.post('http://localhost:3003/todos/getchart')
       .then((res) => {
-        if (res.data.length > 0)
-          this.setState({ dataList: res.data })
-      }).catch((error) => {
-        console.log(error)
-      });
-
-
-    axios.post('http://localhost:3003/todos/getchart' + key)
-      .then((res) => {
         let { dataone, dataBar } = this.state
-        if (res.data.length > 0) {
-          dataone = res.data
-          dataBar.datasets.data = dataone.price
-          this.setState({ dataone, dataBar })
+        if (res.data.length > 0)
+
+          // dataone = res.data
+
+          // dataBar.datasets.data = dataone.price
+
+          // this.setState({ dataone, dataBar })
+
+          console.log("array list : ", res.data)
+
+
+        let gainObject = {}
+        let barData = []
+        let backgroundColor = []
+        let borderColor = []
+        let labels = []
+
+        res.data.map(item => {
+
+          if (gainObject[item.name]) {
+            gainObject[item.name] += item.price * 1.0
+          } else {
+            gainObject[item.name] = item.price * 1.0
+            
+            // barData.push(item.price)
+            backgroundColor.push("rgba(255, 134,159,0.4)")
+            borderColor.push("rgba(255, 134, 159, 1)")
+            // labels.push(item.name)
+
+          }
+
+        })
+        console.log("gainObject ;", gainObject)
+        console.log("getObject values: ", gainObject["admin"]);
+
+        let keys = Object.keys(gainObject);
+        for (var index = 0; index < keys.length; index++) {
+          labels.push(keys[index])
+            console.log(keys[index]);
+          barData.push(gainObject[keys[index]])
+            console.log(gainObject[keys[index]]);
         }
 
+        // Object(gainObject).keys.map(key=>{
+        //     barData.push(key)
+        // })
+
+        console.log("label, price:", labels, barData)
+
+        dataBar.labels = labels
+        dataBar.datasets[0].data = barData
+        dataBar.datasets[0].backgroundColor = backgroundColor
+        dataBar.datasets[0].borderColor = borderColor
+        this.setState({ dataList: res.data, dataBar })
+
       }).catch((error) => {
         console.log(error)
       });
+
+
+    // axios.post('http://localhost:3003/todos/getchart' + key)
+    //   .then((res) => {
+    //     let { dataone, dataBar } = this.state
+    //     if (res.data.length > 0) {
+    //       dataone = res.data
+    //       dataBar.datasets.data = dataone.price
+    //       this.setState({ dataone, dataBar })
+    //     }
+
+    //   }).catch((error) => {
+    //     console.log(error)
+    //   });
 
     // if (localStorage.getItem("key") == 1) {
     //   window.location.href = "/admin/login";
     // } else {
 
     // }
-    this.state.dataBar.datasets.data = this.state.datatwo;
+    // this.state.dataBar.datasets.data = this.state.datatwo;
   }
   render() {
     return (
@@ -189,83 +236,86 @@ export default class Dashboard extends React.Component {
           </select>
         </GridContainer> */}
         <GridContainer >
+
           <MDBContainer>
             <h3 className="mt-5">Plan & Current Quality</h3>
             <Bar data={this.state.dataBar} options={this.state.barChartOptions} />
           </MDBContainer>
+
+
         </GridContainer>
         <Table
-                                // className={classes.table}
-                                aria-labelledby="tableTitle"
-                                size={'medium'}
-                                aria-label="enhanced table"
-                            >
+          // className={classes.table}
+          aria-labelledby="tableTitle"
+          size={'medium'}
+          aria-label="enhanced table"
+        >
 
-                                <TableHead>
-                                    <TableRow>
-                                    <TableCell padding="checkbox">
-                                            <span>No</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Date</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Name</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Price</span>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
+          <TableHead>
+            <TableRow>
+              <TableCell padding="checkbox">
+                <span>No</span>
+              </TableCell>
+              <TableCell padding="checkbox">
+                <span>Date</span>
+              </TableCell>
+              <TableCell padding="checkbox">
+                <span>Name</span>
+              </TableCell>
+              <TableCell padding="checkbox">
+                <span>Price</span>
+              </TableCell>
+            </TableRow>
+          </TableHead>
 
-                                <TableBody>
+          <TableBody>
 
-                                    {
+            {
 
-                                        this.state.dataList.map((item, index) => {
-                                            return (
+              this.state.dataList.map((item, index) => {
+                return (
 
-                                                <TableRow
-                                                    hover
-                                                    tabIndex={-1}
-                                                    key={index}
-                                                >
-                                                    <TableCell padding="checkbox">
-                                                        <span>{index}</span>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.date}</span>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.name}</span>
-                                                    </TableCell>
-                                                   <TableCell padding="checkbox">
-                                                        <span>{item.price}</span>
-                                                    </TableCell>
-                                                   
-                                                </TableRow>
+                  <TableRow
+                    hover
+                    tabIndex={-1}
+                    key={index}
+                  >
+                    <TableCell padding="checkbox">
+                      <span>{index}</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>{item.date}</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>{item.name}</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>{item.price}</span>
+                    </TableCell>
 
-                                            )
-                                        })
-                                    }
+                  </TableRow>
+
+                )
+              })
+            }
 
 
 
-                                </TableBody>
-                            </Table>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+          </TableBody>
+        </Table>
+
+
+
+
+
+
+
+
+
+
+
+
+
         {/* {
 this.state.datatwo.map((item, index) => {
     return (
@@ -287,7 +337,7 @@ this.state.datatwo.map((item, index) => {
 
 
       </div>
-            );
-          }
+    );
+  }
 
 }
