@@ -49,9 +49,13 @@ class Login extends React.Component {
         axios.post('http://192.168.1.190:3003/todos/login', body)
             .then((res) => {
                 if (res.data.email[0].length > 0) {
-                    
+                    if(res.data.flag==1){
+                        localStorage.setItem("key","2");
+                    }else{
+                        localStorage.setItem("key","1");
+                    }
                     window.location.href = "/admin/dashboard";
-                    localStorage.setItem("key","2");
+                   
                 
                 } else {
                     alert("No member!");

@@ -5,6 +5,8 @@ import ChartistGraph from "react-chartist";
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 // @material-ui/icons
+import Button from "components/CustomButtons/Button.js";
+
 import Store from "@material-ui/icons/Store";
 import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
@@ -29,6 +31,13 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TablePagination from '@material-ui/core/TablePagination';
+import TableRow from '@material-ui/core/TableRow';
+
 import { Bar } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
 import axios from "axios";
@@ -48,7 +57,8 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-     
+      dataList: [],
+      datatwo: [12, 19, 3, 5, 6, 5, 3, 3, 3, 3, 3, 3, 3, 3, 9],
       dataone: [],
       dataBar: {
         labels: ["Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red", "Red"],
@@ -119,40 +129,50 @@ export default class Dashboard extends React.Component {
             }
           ]
         }
-        
+
       }
-      
-     
+
+
 
     }
     var key = 2
     //  key = _01
     //  key = _2019
+
+    axios.post('http://localhost:3003/todos/getchart')
+      .then((res) => {
+        if (res.data.length > 0)
+          this.setState({ dataList: res.data })
+      }).catch((error) => {
+        console.log(error)
+      });
+
+
     axios.post('http://localhost:3003/todos/getchart' + key)
       .then((res) => {
-        let {dataone, dataBar} = this.state
-        if (res.data.length > 0){
+        let { dataone, dataBar } = this.state
+        if (res.data.length > 0) {
           dataone = res.data
-          dataBar.datasets.data =  dataone.price
-          this.setState({dataone, dataBar})
+          dataBar.datasets.data = dataone.price
+          this.setState({ dataone, dataBar })
         }
 
       }).catch((error) => {
         console.log(error)
       });
 
-      if (localStorage.getItem("key") == 1) {
-        window.location.href = "/admin/login";
-      } else {
-        
-      }
+    // if (localStorage.getItem("key") == 1) {
+    //   window.location.href = "/admin/login";
+    // } else {
 
+    // }
+    this.state.dataBar.datasets.data = this.state.datatwo;
   }
   render() {
     return (
       <div>
-         
-        <GridContainer>
+
+        {/* <GridContainer>
           <select>
             <option>1</option>
             <option>2</option>
@@ -167,20 +187,107 @@ export default class Dashboard extends React.Component {
             <option>11</option>
             <option>12</option>
           </select>
-        </GridContainer>
+        </GridContainer> */}
         <GridContainer >
           <MDBContainer>
             <h3 className="mt-5">Plan & Current Quality</h3>
             <Bar data={this.state.dataBar} options={this.state.barChartOptions} />
           </MDBContainer>
         </GridContainer>
+        <Table
+                                // className={classes.table}
+                                aria-labelledby="tableTitle"
+                                size={'medium'}
+                                aria-label="enhanced table"
+                            >
+
+                                <TableHead>
+                                    <TableRow>
+                                    <TableCell padding="checkbox">
+                                            <span>No</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Date</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Name</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Price</span>
+                                        </TableCell>
+                                    </TableRow>
+                                </TableHead>
+
+                                <TableBody>
+
+                                    {
+
+                                        this.state.dataList.map((item, index) => {
+                                            return (
+
+                                                <TableRow
+                                                    hover
+                                                    tabIndex={-1}
+                                                    key={index}
+                                                >
+                                                    <TableCell padding="checkbox">
+                                                        <span>{index}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.date}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.name}</span>
+                                                    </TableCell>
+                                                   <TableCell padding="checkbox">
+                                                        <span>{item.price}</span>
+                                                    </TableCell>
+                                                   
+                                                </TableRow>
+
+                                            )
+                                        })
+                                    }
+
+
+
+                                </TableBody>
+                            </Table>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        {/* {
+this.state.datatwo.map((item, index) => {
+    return (
+        
+         
+            <div    style={{height:item*100,width:"25px",color:"green"}}>
+                <span>{item*100}</span>
+            </div>        
+
+    )
+})
+} */}
+        {/* <div id="chartdiv">
+          <iframe width="100%" src="./chart.html" />
+        </div> */}
 
 
 
 
 
       </div>
-    );
-  }
+            );
+          }
 
 }

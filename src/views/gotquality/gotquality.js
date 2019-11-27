@@ -42,26 +42,31 @@ export default class Gotquality extends React.Component {
             timeline: '',
             review: '',
             dataList: [],
-            dataname: ['name1', 'name2', 'name3', 'name4', 'name5', 'name6', 'name7', 'name8', 'name9', 'name10', 'name11', 'name12', 'name13', 'name14', 'name15',],
+            dataname: [],
         }
+        axios.post('http://localhost:3003/todos/showdistinct')
+      .then((res) => {
+        if (res.data.length > 0)
+          this.setState({ dataname: res.data })
+      }).catch((error) => {
+        console.log(error)
+      });
+
         axios.post('http://localhost:3003/todos/jobshow')
             .then((res) => {
-                // this.state.email=res.data[0].email;
-                // this.state.password=res.data[0].password;
-                // alert(res.data[0].email);
-
                 if (res.data.length > 0)
                     this.setState({ dataList: res.data })
-
-                // alert("Successful!!");
             }).catch((error) => {
                 console.log(error)
             });
-            if (localStorage.getItem("key") == 1) {
-                window.location.href = "/admin/login";
-              } else {
-                
-              }
+ 
+
+
+        if (localStorage.getItem("key") == 1) {
+            window.location.href = "/admin/login";
+        } else {
+
+        }
 
     }
     onAddjob = () => {
@@ -82,22 +87,22 @@ export default class Gotquality extends React.Component {
             });
     }
 
-    update = (data)=>{
+    update = (data) => {
         alert("item update clicked : " + data)
-        let id=data
-        let body=this.state.dataList
-        axios.post('http://192.168.1.190:3003/todos/workupdate'+id,body)
-        .then((res) => {
-            console.log(res.data)
-            alert("Successful!!");
-        }).catch((error) => {
-            console.log(error)
-        });
+        let id = data
+        let body = this.state.dataList
+        axios.post('http://192.168.1.190:3003/todos/workupdate' + id, body)
+            .then((res) => {
+                console.log(res.data)
+                alert("Successful!!");
+            }).catch((error) => {
+                console.log(error)
+            });
     }
-    delete = (data)=>{
+    delete = (data) => {
         alert("item clicked : " + data)
-        let id=data
-        axios.delete('http://192.168.1.190:3003/todos/workdelete/'+id)
+        let id = data
+        axios.delete('http://192.168.1.190:3003/todos/workdelete/' + id)
             .then((res) => {
                 console.log(res.data)
                 alert("Successful_del!!");
@@ -126,11 +131,11 @@ export default class Gotquality extends React.Component {
                                     />
                                 </GridItem>
                                 <GridItem xs={12} sm={12} md={6}>
-                                      <select id="name" style={{ fontSize: '35px', width: '100%' }}>
+                                    <select id="name" style={{ fontSize: '35px', width: '100%' }}>
                                         {
                                             this.state.dataname.map((item, index) => {
                                                 return (
-                                                    <option key={index}>{item}</option>
+                                                    <option key={index}>{item.name}</option>
                                                 )
                                             })
                                         }
@@ -262,9 +267,9 @@ export default class Gotquality extends React.Component {
                                         <TableCell padding="checkbox">
                                             <span>Review</span>
                                         </TableCell>
-                                        <TableCell padding="checkbox">
+                                        {/* <TableCell padding="checkbox">
                                             <span>Update</span>
-                                        </TableCell>
+                                        </TableCell> */}
                                         <TableCell padding="checkbox">
                                             <span>Delete</span>
                                         </TableCell>
@@ -281,7 +286,7 @@ export default class Gotquality extends React.Component {
                                                 <TableRow
                                                     hover
                                                     tabIndex={-1}
-                                                    key={index}                                                    
+                                                    key={index}
                                                 >
                                                     <TableCell padding="checkbox">
                                                         <span>{item.date}</span>
@@ -300,20 +305,20 @@ export default class Gotquality extends React.Component {
                                                     </TableCell>
                                                     <TableCell padding="checkbox">
                                                         <span>{item.timeline}</span>
-                                                    </TableCell>   
+                                                    </TableCell>
                                                     <TableCell padding="checkbox">
                                                         <span>{item.review}</span>
-                                                    </TableCell>                                                  
-                                                    <TableCell padding="checkbox">
+                                                    </TableCell>
+                                                    {/* <TableCell padding="checkbox">
                                                         <Button
                                                              onClick = {this.update.bind(this, item._id)}
                                                         >Update                                                       
                                                         </Button>
-                                                    </TableCell>
+                                                    </TableCell> */}
                                                     <TableCell padding="checkbox">
                                                         <Button
-                                                             onClick = {this.delete.bind(this, item._id)}
-                                                        >Delete                                                      
+                                                            onClick={this.delete.bind(this, item._id)}
+                                                        >Delete
                                                         </Button>
                                                     </TableCell>
                                                 </TableRow>

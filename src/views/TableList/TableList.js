@@ -47,23 +47,17 @@ export default class TableList extends React.Component {
     }
     axios.post('http://localhost:3003/todos/show')
       .then((res) => {
-        // this.state.email=res.data[0].email;
-        // this.state.password=res.data[0].password;
-        // alert(res.data[0].email);
-
         if (res.data.length > 0)
           this.setState({ dataList: res.data })
-
-        // alert("Successful!!");
       }).catch((error) => {
         console.log(error)
       });
 
-      if (localStorage.getItem("key") == 1) {
-        window.location.href = "/admin/login";
-      } else {
-        
-      }
+    if (localStorage.getItem("key") == 1) {
+      window.location.href = "/admin/login";
+    } else {
+
+    }
   }
   changename = (e) => { this.setState({ name: e.target.value }); }
   changeemail = (e) => { this.setState({ email: e.target.value }); }
@@ -86,7 +80,7 @@ export default class TableList extends React.Component {
       axios.post('http://192.168.1.190:3003/todos/add', body)
         .then((res) => {
           console.log(res.data)
-          alert("Successful!!");          
+          alert("Successful!!");
         }).catch((error) => {
           console.log(error)
         });
@@ -106,29 +100,30 @@ export default class TableList extends React.Component {
       flag: '',
     })
   }
-  update = (data)=>{
+  update = (data) => {
     alert("item update clicked : " + data)
-    let id=data
-    let body=this.state.dataList
-    axios.post('http://192.168.1.190:3003/todos/userupdate'+id,body)
-    .then((res) => {
+    let id = data
+    let body = this.state.dataList
+    axios.post('http://192.168.1.190:3003/todos/userupdate' + id, body)
+      .then((res) => {
         console.log(res.data)
         alert("Successful!!");
-    }).catch((error) => {
+      }).catch((error) => {
         console.log(error)
-    });
-}
-delete = (data)=>{
+      });
+  }
+  delete = (data) => {
     alert("item clicked : " + data)
-    let id=data
-    axios.post('http://192.168.1.190:3003/todos/userdelete'+id)
-        .then((res) => {
-            console.log(res.data)
-            alert("Successful!!");
-        }).catch((error) => {
-            console.log(error)
-        });
-}
+    let id = data
+    axios.delete('http://192.168.1.190:3003/todos/userdelete/' + id)
+      .then((res) => {
+        console.log(res.data)
+        alert("Successful_del!!");
+      }).catch((error) => {
+        console.log(error)
+      });
+  }
+
   render() {
     return (
       <GridContainer>
@@ -244,95 +239,95 @@ delete = (data)=>{
                     tableHead={["Name", "Birthday", "Address", "phonenumber", "email", "password"]}
                     tableData={[this.state.dataList,]}
                     /> */}
-                    <Table
-                                // className={classes.table}
-                                aria-labelledby="tableTitle"
-                                size={'medium'}
-                                aria-label="enhanced table"
-                            >
+              <Table
+                // className={classes.table}
+                aria-labelledby="tableTitle"
+                size={'medium'}
+                aria-label="enhanced table"
+              >
 
-                                <TableHead>
-                                    <TableRow>
-                                        <TableCell padding="checkbox">
-                                            <span>Name</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Birthday</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Address</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Phonenumber</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Email</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Password</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
+                <TableHead>
+                  <TableRow>
+                    <TableCell padding="checkbox">
+                      <span>Name</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>Birthday</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>Address</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>Phonenumber</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>Email</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>Password</span>
+                    </TableCell>
+                    {/* <TableCell padding="checkbox">
                                             <span>Update</span>
-                                        </TableCell>
-                                        <TableCell padding="checkbox">
-                                            <span>Delete</span>
-                                        </TableCell>
-                                    </TableRow>
-                                </TableHead>
+                                        </TableCell> */}
+                    <TableCell padding="checkbox">
+                      <span>Delete</span>
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
 
-                                <TableBody>
+                <TableBody>
 
-                                    {
+                  {
 
-                                        this.state.dataList.map((item, index) => {
-                                            return (
+                    this.state.dataList.map((item, index) => {
+                      return (
 
-                                                <TableRow
-                                                    hover
-                                                    tabIndex={-1}
-                                                    key={index}                                                    
-                                                >
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.date}</span>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.name}</span>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.jobtitle}</span>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.clientname}</span>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.price}</span>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <span>{item.timeline}</span>
-                                                    </TableCell>                                                  
-                                                    <TableCell padding="checkbox">
+                        <TableRow
+                          hover
+                          tabIndex={-1}
+                          key={index}
+                        >
+                          <TableCell padding="checkbox">
+                            <span>{item.name}</span>
+                          </TableCell>
+                          <TableCell padding="checkbox">
+                            <span>{item.birthday}</span>
+                          </TableCell>
+                          <TableCell padding="checkbox">
+                            <span>{item.address}</span>
+                          </TableCell>
+                          <TableCell padding="checkbox">
+                            <span>{item.phonenumber}</span>
+                          </TableCell>
+                          <TableCell padding="checkbox">
+                            <span>{item.email}</span>
+                          </TableCell>
+                          <TableCell padding="checkbox">
+                            <span>{item.password}</span>
+                          </TableCell>
+                          {/* <TableCell padding="checkbox">
                                                         <Button
                                                              onClick = {this.update.bind(this, item.date)}
                                                         >Update                                                       
                                                         </Button>
-                                                    </TableCell>
-                                                    <TableCell padding="checkbox">
-                                                        <Button
-                                                             onClick = {this.delete.bind(this, item.date)}
-                                                        >Delete                                                      
+                                                    </TableCell> */}
+                          <TableCell padding="checkbox">
+                            <Button
+                              onClick={this.delete.bind(this, item._id)}
+                            >Delete
                                                         </Button>
-                                                    </TableCell>
-                                                </TableRow>
+                          </TableCell>
+                        </TableRow>
 
-                                            )
-                                        })
-                                    }
+                      )
+                    })
+                  }
 
 
 
-                                </TableBody>
-                            </Table>
-            
+                </TableBody>
+              </Table>
+
 
             </CardBody>
           </Card>
