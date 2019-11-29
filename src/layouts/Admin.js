@@ -94,7 +94,7 @@ export default function Admin({ ...rest }) {
   }, [mainPanel]);
   return (
     <div className={classes.wrapper}>
-      <Sidebar
+      {/* <Sidebar
         routes={routes}
         logoText={"Creative Tim"}
         logo={logo}
@@ -103,7 +103,7 @@ export default function Admin({ ...rest }) {
         open={mobileOpen}
         color={color}
         {...rest}
-      />
+      /> */}
       <div className={classes.mainPanel} ref={mainPanel}>
         <Navbar
           routes={routes}

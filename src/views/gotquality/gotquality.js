@@ -70,18 +70,21 @@ export default class Gotquality extends React.Component {
 
     }
     onAddjob = () => {
-        var datev = document.getElementById('date').value;
+        var monthv = document.getElementById('month').value;
+        var dayv = document.getElementById('day').value;
+        var yearv = document.getElementById('year').value;
         var namev = document.getElementById('name').value;
         var jobtitlev = document.getElementById('jobtitle').value;
         var clientnamev = document.getElementById('clientname').value;
         var pricev = document.getElementById('price').value;
         var timelinev = document.getElementById('timeline').value;
         var reviewv = document.getElementById('review').value;
-        let body = { date: datev, name: namev, jobtitle: jobtitlev, clientname: clientnamev, price: pricev, timeline: timelinev, review: reviewv }
+        let body = { month: monthv, day:dayv, year:yearv, name: namev, jobtitle: jobtitlev, clientname: clientnamev, price: pricev, timeline: timelinev, review: reviewv }
         axios.post('http://192.168.1.190:3003/todos/working', body)
             .then((res) => {
                 console.log(res.data)
                 alert("Successful!!");
+                window.location.reload();
             }).catch((error) => {
                 console.log(error)
             });
@@ -106,12 +109,17 @@ export default class Gotquality extends React.Component {
             .then((res) => {
                 console.log(res.data)
                 alert("Successful_del!!");
+                window.location.reload();
             }).catch((error) => {
                 console.log(error)
             });
     }
     render() {
         return (
+            <div>
+                <p><a href="/admin/dashboard">Dashboard</a> &nbsp; <a href="/admin/table">admin Panel</a>&nbsp; <a href="/admin/login">Logout</a></p><br/>
+           
+            
             <GridContainer>
                 <GridItem xs={12} sm={12} md={12}>
                     <Card>
@@ -121,16 +129,34 @@ export default class Gotquality extends React.Component {
                         </CardHeader>
                         <CardBody>
                             <GridContainer>
-                                <GridItem xs={12} sm={12} md={6}>
+                                <GridItem xs={12} sm={12} md={3}>
                                     <CustomInput
-                                        labelText="Date"
-                                        id="date"
+                                        labelText="month"
+                                        id="month"
                                         formControlProps={{
                                             fullWidth: true
                                         }}
                                     />
                                 </GridItem>
-                                <GridItem xs={12} sm={12} md={6}>
+                                <GridItem xs={12} sm={12} md={3}>
+                                    <CustomInput
+                                        labelText="day"
+                                        id="day"
+                                        formControlProps={{
+                                            fullWidth: true
+                                        }}
+                                    />
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={3}>
+                                    <CustomInput
+                                        labelText="year"
+                                        id="year"
+                                        formControlProps={{
+                                            fullWidth: true
+                                        }}
+                                    />
+                                </GridItem>
+                                <GridItem xs={12} sm={12} md={3}>
                                     <select id="name" style={{ fontSize: '35px', width: '100%' }}>
                                         {
                                             this.state.dataname.map((item, index) => {
@@ -140,13 +166,6 @@ export default class Gotquality extends React.Component {
                                             })
                                         }
                                     </select>
-                                    {/* <CustomInput
-                                        labelText="Name"
-                                        id="name"
-                                        formControlProps={{
-                                            fullWidth: true
-                                        }}
-                                    /> */}
                                 </GridItem>
                             </GridContainer>
                             <GridContainer>
@@ -247,7 +266,16 @@ export default class Gotquality extends React.Component {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell padding="checkbox">
-                                            <span>Date</span>
+                                            <span>No</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Month</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Day</span>
+                                        </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <span>Year</span>
                                         </TableCell>
                                         <TableCell padding="checkbox">
                                             <span>Name</span>
@@ -289,7 +317,16 @@ export default class Gotquality extends React.Component {
                                                     key={index}
                                                 >
                                                     <TableCell padding="checkbox">
-                                                        <span>{item.date}</span>
+                                                        <span>{index+1}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.month}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.day}</span>
+                                                    </TableCell>
+                                                    <TableCell padding="checkbox">
+                                                        <span>{item.year}</span>
                                                     </TableCell>
                                                     <TableCell padding="checkbox">
                                                         <span>{item.name}</span>
@@ -362,6 +399,7 @@ export default class Gotquality extends React.Component {
                     </Card>
                 </GridItem>
             </GridContainer>
+            </div>
         );
     }
 

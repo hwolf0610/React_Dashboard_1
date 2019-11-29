@@ -12,7 +12,7 @@ import Button from "components/CustomButtons/Button.js";
 // import CardAvatar from "components/Card/CardAvatar.js";
 // import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-
+import PasswordField from 'material-ui-password-field'
 
 // import avatar from "assets/img/faces/marc.jpg";
 import axios from "axios";
@@ -29,7 +29,7 @@ class Login extends React.Component {
             phonenumber: '',
             flag: '',
         }
-        let body = { name: 'admin', birthday: '10/6/1996', address: 'dandong', phonenumber: '1993836374', email: 'admin', password: 'admin', flag: '1' }
+        let body = { name: 'admin', birthday: '10/6/1996', address: 'dandong', phonenumber: '1993836374', email: 'hwolf0610@outlook.com', password: 'admin', flag: '1' }
         axios.post('http://192.168.1.190:3003/todos/start', body)
             .then((res) => {
                 console.log(res.data)
@@ -39,7 +39,9 @@ class Login extends React.Component {
             });
         // this.props.flag=1;
         // localStorage.setItem("key","1");
+        localStorage.setItem("key","0");
     }
+    
     changeemail = (e) => { this.setState({ email: e.target.value }); alert(this.state.email) }
     changepass = (e) => { this.setState({ password: e.target.value }); }
     onSignin = () => {
@@ -49,6 +51,7 @@ class Login extends React.Component {
         axios.post('http://192.168.1.190:3003/todos/login', body)
             .then((res) => {
                 if (res.data.email[0].length > 0) {
+                    
                     if(res.data.flag==1){
                         localStorage.setItem("key","2");
                     }else{
@@ -101,8 +104,15 @@ class Login extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12} lg={12} xl={12}>
                         <GridItem xs={6} sm={6} md={5} lg={4} xl={3}>
-                        
-                            <CustomInput
+                            <PasswordField
+                            hintText="At least 8 characters"
+                            floatingLabelText="Enter your password"
+                            errorText="Your password is too short"
+                            value={this.state.password}
+                                onChange={this.changepass}
+                                id="password"
+                            />
+                            {/* <CustomInput
                                 type="password"
                                 className="form-control"
                                 labelText="Password"
@@ -112,13 +122,17 @@ class Login extends React.Component {
                                 formControlProps={{
                                     fullWidth: true
                                 }}
-                            />
+                            /> */}
                         </GridItem>
                     </GridItem>
-                    <CardFooter>
+                    <GridItem xs={12} sm={12} md={12} lg={12} xl={12}>
+                        <GridItem xs={6} sm={6} md={5} lg={4} xl={3}>
                         <Button color="primary" onClick={this.onSignin}>Sign IN</Button>
-                    </CardFooter>
+                        </GridItem>
+                    </GridItem>
+                     
                 </GridContainer>
+                
             </div>
         );
 

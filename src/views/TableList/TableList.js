@@ -81,6 +81,7 @@ export default class TableList extends React.Component {
         .then((res) => {
           console.log(res.data)
           alert("Successful!!");
+          window.location.reload();
         }).catch((error) => {
           console.log(error)
         });
@@ -108,6 +109,7 @@ export default class TableList extends React.Component {
       .then((res) => {
         console.log(res.data)
         alert("Successful!!");
+        window.location.reload();
       }).catch((error) => {
         console.log(error)
       });
@@ -119,6 +121,7 @@ export default class TableList extends React.Component {
       .then((res) => {
         console.log(res.data)
         alert("Successful_del!!");
+        window.location.reload();
       }).catch((error) => {
         console.log(error)
       });
@@ -126,6 +129,9 @@ export default class TableList extends React.Component {
 
   render() {
     return (
+      <div>
+         <p><a href="/admin/dashboard">Dashboard</a> &nbsp; <a href="/admin/gotquality">Plan Quality</a>&nbsp; <a href="/admin/login">Logout</a></p><br/>
+     
       <GridContainer>
 
         <GridItem xs={12} sm={12} md={12}>
@@ -249,6 +255,9 @@ export default class TableList extends React.Component {
                 <TableHead>
                   <TableRow>
                     <TableCell padding="checkbox">
+                      <span>No</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
                       <span>Name</span>
                     </TableCell>
                     <TableCell padding="checkbox">
@@ -287,6 +296,9 @@ export default class TableList extends React.Component {
                           tabIndex={-1}
                           key={index}
                         >
+                          <TableCell padding="checkbox">
+                            <span>{index+1}</span>
+                          </TableCell>
                           <TableCell padding="checkbox">
                             <span>{item.name}</span>
                           </TableCell>
@@ -368,6 +380,7 @@ export default class TableList extends React.Component {
               </CardBody>
             </Card>
           </GridItem> */}
-      </GridContainer>);
+      </GridContainer>
+      </div>);
   }
 }

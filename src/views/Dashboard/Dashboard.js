@@ -40,6 +40,7 @@ import TableRow from '@material-ui/core/TableRow';
 
 import { Bar } from "react-chartjs-2";
 import { MDBContainer } from "mdbreact";
+
 import axios from "axios";
 // import { bugs, website, server } from "variables/general.js";
 
@@ -57,9 +58,23 @@ const useStyles = makeStyles(styles);
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props)
+    // var date = new Date().getDate(); //Current Date
+    // var month = new Date().getMonth() + 1; //Current Month
+    // var year = new Date().getFullYear(); //Current Year
+    // var hours = new Date().getHours(); //Current Hours
+    // var min = new Date().getMinutes(); //Current Minutes
+    // var sec = new Date().getSeconds(); //Current Seconds
+    var today = new Date(),
+    date = today.getMonth() + 1;
+    var today1 = new Date(),
+    year=today1.getFullYear();
+
+
     this.state = {
       dataList: [],
       dataone: [],
+      currentmonth: date,
+      currentyear: year,
       dataBar: {
         labels: [],
         datasets: [
@@ -103,138 +118,126 @@ export default class Dashboard extends React.Component {
       }
 
 
-
     }
-    var key = 2
-    //  key = _01
-    //  key = _2019
-    // axios.post('http://localhost:3003/todos/show')
-    // .then((res) => {
-    //   if (res.data.length > 0){
-    //     let filtername=[]
-    //     let filterprice=[]
-    //     res.data.map(item=>{
-    //       filtername.push(item.name)
-    //     })
-    //     for(var i=0; i<filtername.length-1;i++){
-    //       for(var j=1;j<filtername.length;j++){
-    //         if (filtername[i]==filtername[j]) {
+    if (localStorage.getItem("key") == 0) {
+      window.location.href = "/admin/login";
+  } else {
 
-    //         } else {
+  }
+  }
 
-    //         }
-    //       }          
-    //     }
 
-    //   }
-    //     this.setState({ dataList: res.data })
-    // }).catch((error) => {
-    //   console.log(error)
-    // });
+
+  componentDidMount = () => {
 
     axios.post('http://localhost:3003/todos/getchart')
       .then((res) => {
-        let { dataone, dataBar } = this.state
-        if (res.data.length > 0)
 
-          // dataone = res.data
+        let { dataone, dataBar, dataList, currentmonth, currentyear } = this.state
 
-          // dataBar.datasets.data = dataone.price
-
-          // this.setState({ dataone, dataBar })
-
-          console.log("array list : ", res.data)
-
-
-        let gainObject = {}
-        let barData = []
-        let backgroundColor = []
-        let borderColor = []
-        let labels = []
-
-        res.data.map(item => {
-
-          if (gainObject[item.name]) {
-            gainObject[item.name] += item.price * 1.0
-          } else {
-            gainObject[item.name] = item.price * 1.0
-            
-            // barData.push(item.price)
-            backgroundColor.push("rgba(255, 134,159,0.4)")
-            borderColor.push("rgba(255, 134, 159, 1)")
-            // labels.push(item.name)
-
-          }
-
-        })
-        console.log("gainObject ;", gainObject)
-        console.log("getObject values: ", gainObject["admin"]);
-
-        let keys = Object.keys(gainObject);
-        for (var index = 0; index < keys.length; index++) {
-          labels.push(keys[index])
-            console.log(keys[index]);
-          barData.push(gainObject[keys[index]])
-            console.log(gainObject[keys[index]]);
+        if (res.data.length > 0){
+          dataList = res.data
+          this.setState({dataList})
+          this.update_data_bar( )
         }
-
-        // Object(gainObject).keys.map(key=>{
-        //     barData.push(key)
-        // })
-
-        console.log("label, price:", labels, barData)
-
-        dataBar.labels = labels
-        dataBar.datasets[0].data = barData
-        dataBar.datasets[0].backgroundColor = backgroundColor
-        dataBar.datasets[0].borderColor = borderColor
-        this.setState({ dataList: res.data, dataBar })
-
+        console.log("array list : ", dataList)
       }).catch((error) => {
         console.log(error)
       });
-
-
-    // axios.post('http://localhost:3003/todos/getchart' + key)
-    //   .then((res) => {
-    //     let { dataone, dataBar } = this.state
-    //     if (res.data.length > 0) {
-    //       dataone = res.data
-    //       dataBar.datasets.data = dataone.price
-    //       this.setState({ dataone, dataBar })
-    //     }
-
-    //   }).catch((error) => {
-    //     console.log(error)
-    //   });
-
-    // if (localStorage.getItem("key") == 1) {
-    //   window.location.href = "/admin/login";
-    // } else {
-
-    // }
-    // this.state.dataBar.datasets.data = this.state.datatwo;
   }
+  updateYearState = (e) => { this.setState({ currentyear: e.target.value }) }
+  updateMonthState = (e) => { this.setState({ currentmonth: e.target.value })}
+  update_data_bar = ( )=>{
+
+    let {currentmonth, currentyear, dataList, dataBar}=  this.state
+
+    
+    let gainObject = {}
+    let barData = []
+    let backgroundColor = []
+    let borderColor = []
+    let labels = []
+
+    // currentmonth = month
+    // currentyear = year
+    // console.log("selected month : ", month, year)
+    dataList.map(item => {
+      if (item.month == currentmonth && item.year==currentyear) {
+        if (gainObject[item.name]) {
+          gainObject[item.name] += item.price * 1.0
+        } else {
+          gainObject[item.name] = item.price * 1.0
+          backgroundColor.push("rgba(255, 134,159,0.4)")
+          borderColor.push("rgba(255, 134, 159, 1)")
+        }
+      } else {
+      }
+    })
+
+    console.log("gainObject ;", gainObject)
+    console.log("getObject values: ", gainObject["admin"]);
+
+    let keys = Object.keys(gainObject);
+    for (var index = 0; index < keys.length; index++) {
+      labels.push(keys[index])
+      barData.push(gainObject[keys[index]])
+    }
+    dataBar.labels = labels
+    dataBar.datasets[0].data = barData
+    dataBar.datasets[0].backgroundColor = backgroundColor
+    dataBar.datasets[0].borderColor = borderColor
+    this.setState({ dataBar, currentmonth })  
+  
+  }
+
+  
+
+
+//   setmonth = () => {
+//     var year = document.getElementById('selectyear').value;
+//     var month = document.getElementById('selectmonth').value;
+//     console.log("month value : ",  month)
+//     // this.setState({ currentmonth: month })
+//     this.update_data_bar(month,year)
+//     // window.location.reload();
+//   }
+
   render() {
     return (
       <div>
-
-        {/* <GridContainer>
-          <select>
-            <option>1</option>
-            <option>2</option>
-            <option>3</option>
-            <option>4</option>
-            <option>5</option>
-            <option>6</option>
-            <option>7</option>
-            <option>8</option>
-            <option>9</option>
-            <option>10</option>
-            <option>11</option>
-            <option>12</option>
+         <p><a href="/admin/table">admin Panel</a> &nbsp; <a href="/admin/gotquality">Plan Quality</a>&nbsp; <a href="/admin/login">Logout</a></p><br/>
+        <GridContainer>
+                         
+        Year:<select value={this.state.currentyear} onChange={this.updateYearState} id="selectyear">
+            <option value="2018">2018</option>
+            <option value="2019">2019</option>
+            <option value="2020">2020</option>
+            <option value="2021">2021</option>
+            <option value="2022">2022</option>
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
           </select>
-        </GridContainer> */}
+          {/* <input type="text"  value= {this.state.currentmonth} />          */}
+          Month:<select value={this.state.currentmonth} onChange={this.updateMonthState} id="selectmonth">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option> 
+          </select>
+          <button onClick={this.update_data_bar} className="btn btn-success">Change</button>
+        </GridContainer>
         <GridContainer >
 
           <MDBContainer>
@@ -257,7 +260,13 @@ export default class Dashboard extends React.Component {
                 <span>No</span>
               </TableCell>
               <TableCell padding="checkbox">
-                <span>Date</span>
+                <span>Month</span>
+              </TableCell>
+              <TableCell padding="checkbox">
+                <span>Day</span>
+              </TableCell>
+              <TableCell padding="checkbox">
+                <span>Year</span>
               </TableCell>
               <TableCell padding="checkbox">
                 <span>Name</span>
@@ -281,10 +290,16 @@ export default class Dashboard extends React.Component {
                     key={index}
                   >
                     <TableCell padding="checkbox">
-                      <span>{index}</span>
+                      <span>{index + 1}</span>
                     </TableCell>
                     <TableCell padding="checkbox">
-                      <span>{item.date}</span>
+                      <span>{item.month}</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>{item.day}</span>
+                    </TableCell>
+                    <TableCell padding="checkbox">
+                      <span>{item.year}</span>
                     </TableCell>
                     <TableCell padding="checkbox">
                       <span>{item.name}</span>
